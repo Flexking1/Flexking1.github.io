@@ -4,13 +4,13 @@ const TELEGRAM_CHAT_ID = '6954461123';
 
 // База данных товаров
 const products = [
-    { id: 1, name: "Neon Matrix К65", price: 8900, category: "keyboards", desc: "Механическая клавиатура, Gateron Yellow, RGB", image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&q=80" },
-    { id: 2, name: "Cyber Glide X", price: 4500, category: "mice", desc: "Беспроводная мышь, 26000 DPI, 54 грамма", image: "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=400&q=80" },
-    { id: 3, name: "Overdrive Pro", price: 12400, category: "headphones", desc: "Гарнитура со звуком 7.1 и неоновой подсветкой", image: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400&q=80" },
-    { id: 4, name: "Grid Runner Pad", price: 2100, category: "mousepads", desc: "Ковёр с контурной подсветкой 900x400мм", image: "https://images.unsplash.com/photo-1616440347437-b1c73416efc2?w=400&q=80" },
-    { id: 5, name: "Quantum V 27'", price: 34000, category: "monitors", desc: "IPS, 2K, 240Hz, Отклик 0.5мс", image: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&q=80" },
-    { id: 6, name: "CyberPhone Edge", price: 78000, category: "phones", desc: "Amoled 144Hz, Геймерский чипсет, 16GB RAM", image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&q=80" },
-    { id: 7, name: "Neon Tab Pro", price: 45000, category: "tablets", desc: "Экран 12.9', Поддержка стилуса, 5G модуляция", image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&q=80" }
+    { id: 1, name: "Neon Matrix К65", price: 999999999, category: "keyboards", desc: "Механическая клавиатура, Gateron Yellow, RGB", image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&q=80" },
+    { id: 2, name: "Cyber Glide X", price: 99999999, category: "mice", desc: "Беспроводная мышь, 26000 DPI, 54 грамма", image: "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=400&q=80" },
+    { id: 3, name: "Overdrive Pro", price: 99999999, category: "headphones", desc: "Гарнитура со звуком 7.1 и неоновой подсветкой", image: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400&q=80" },
+    { id: 4, name: "Grid Runner Pad", price: 99999999, category: "mousepads", desc: "Ковёр с контурной подсветкой 900x400мм", image: "https://images.unsplash.com/photo-1616440347437-b1c73416efc2?w=400&q=80" },
+    { id: 5, name: "Quantum V 27'", price: 999999999990, category: "monitors", desc: "IPS, 2K, 240Hz, Отклик 0.5мс", image: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&q=80" },
+    { id: 6, name: "CyberPhone Edge", price: 999999990, category: "phones", desc: "Amoled 144Hz, Геймерский чипсет, 16GB RAM", image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&q=80" },
+    { id: 7, name: "Neon Tab Pro", price: 99999999, category: "tablets", desc: "Экран 12.9', Поддержка стилуса, 5G модуляция", image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&q=80" }
 ];
 
 const categories = [
