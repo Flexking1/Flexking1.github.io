@@ -11,8 +11,8 @@ const products = [
         category: "keyboards", 
         desc: "Механическая клавиатура, Gateron Yellow, RGB", 
         image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5V7Msl-5tkA6Cc-qGfOQEgrxri9406ZWEIYhDfdjGjQ&s=10",
-        baseFeatures: { "Тип переключателей": "Механические (Gateron Yellow)", "Подсветка": "RGB (16.8 млн цветов)", "Формат": "65%" },
-        allFeatures: { "Тип переключателей": "Механические (Gateron Yellow)", "Подсветка": "RGB (16.8 млн цветов)", "Формат": "65%", "Интерфейс": "Type-C / Bluetooth / 2.4GHz", "Материал кейса": "ABS-пластик", "Hot-swap": "Есть", "Емкость батареи": "4000 mAh", "Вес": "820 г" }
+        baseFeatures: { "Тип переключателей": "Механические (Leobog Gray Wood)", "Подсветка": "RGB (16.8 млн цветов)", "Формат": "75%" },
+        allFeatures: { "Тип переключателей": "Механические (Leobog Gray Wood)", "Подсветка": "RGB (16.8 млн цветов)", "Формат": "75%", "Интерфейс": "Type-C / Bluetooth / 2.4GHz", "Материал кейса": "ABS-пластик", "Hot-swap": "Есть", "Емкость батареи": "4000 mAh", "Вес": "1023 г" }
     },
     { 
         id: 2, 
