@@ -2,15 +2,78 @@
 const TELEGRAM_BOT_TOKEN = '8696257846:AAFhjWlgS8FcmN00SL1seQSqoGzt3I8Sauo';
 const TELEGRAM_CHAT_ID = '6954461123'; 
 
-// База данных товаров
+// База данных товаров с базовыми и полными характеристиками
 const products = [
-    { id: 1, name: "Neon Matrix К65", price: 999999999, category: "keyboards", desc: "Механическая клавиатура, Gateron Yellow, RGB", image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&q=80" },
-    { id: 2, name: "Cyber Glide X", price: 99999999, category: "mice", desc: "Беспроводная мышь, 26000 DPI, 54 грамма", image: "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=400&q=80" },
-    { id: 3, name: "Overdrive Pro", price: 99999999, category: "headphones", desc: "Гарнитура со звуком 7.1 и неоновой подсветкой", image: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400&q=80" },
-    { id: 4, name: "Grid Runner Pad", price: 99999999, category: "mousepads", desc: "Ковёр с контурной подсветкой 900x400мм", image: "https://images.unsplash.com/photo-1616440347437-b1c73416efc2?w=400&q=80" },
-    { id: 5, name: "Quantum V 27'", price: 999999999990, category: "monitors", desc: "IPS, 2K, 240Hz, Отклик 0.5мс", image: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&q=80" },
-    { id: 6, name: "CyberPhone Edge", price: 999999990, category: "phones", desc: "Amoled 144Hz, Геймерский чипсет, 16GB RAM", image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&q=80" },
-    { id: 7, name: "Neon Tab Pro", price: 99999999, category: "tablets", desc: "Экран 12.9', Поддержка стилуса, 5G модуляция", image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&q=80" }
+    { 
+        id: 1, 
+        name: "Neon Matrix К65", 
+        price: 8900, 
+        category: "keyboards", 
+        desc: "Механическая клавиатура, Gateron Yellow, RGB", 
+        image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&q=80",
+        baseFeatures: { "Тип переключателей": "Механические (Gateron Yellow)", "Подсветка": "RGB (16.8 млн цветов)", "Формат": "65%" },
+        allFeatures: { "Тип переключателей": "Механические (Gateron Yellow)", "Подсветка": "RGB (16.8 млн цветов)", "Формат": "65%", "Интерфейс": "Type-C / Bluetooth / 2.4GHz", "Материал кейса": "ABS-пластик", "Hot-swap": "Есть", "Емкость батареи": "4000 mAh", "Вес": "820 г" }
+    },
+    { 
+        id: 2, 
+        name: "Cyber Glide X", 
+        price: 4500, 
+        category: "mice", 
+        desc: "Беспроводная мышь, 26000 DPI, 54 грамма", 
+        image: "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=400&q=80",
+        baseFeatures: { "Сенсор": "Оптический (PixArt 3395)", "Макс. DPI": "26000", "Вес": "54 грамма" },
+        allFeatures: { "Сенсор": "Оптический (PixArt 3395)", "Макс. DPI": "26000", "Вес": "54 грамма", "Тип подключения": "Беспроводной (2.4GHz) / Проводной", "Время работы": "До 70 часов", "Количество кнопок": "6", "Переключатели": "Huano Blue Shell (80 млн кликов)" }
+    },
+    { 
+        id: 3, 
+        name: "Overdrive Pro", 
+        price: 12400, 
+        category: "headphones", 
+        desc: "Гарнитура со звуком 7.1 и неоновой подсветкой", 
+        image: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400&q=80",
+        baseFeatures: { "Звук": "Виртуальный 7.1", "Диаметр мембраны": "50 мм", "Тип подключения": "USB / AUX 3.5мм" },
+        allFeatures: { "Звук": "Виртуальный 7.1", "Диаметр мембраны": "50 мм", "Тип подключения": "USB / AUX 3.5мм", "Частотный диапазон": "20 Гц - 20 кГц", "Микрофон": "Съемный, с шумоподавлением", "Материал амбушюр": "Протеиновая кожа", "Длина кабеля": "2.1 м" }
+    },
+    { 
+        id: 4, 
+        name: "Grid Runner Pad", 
+        price: 2100, 
+        category: "mousepads", 
+        desc: "Ковёр с контурной подсветкой 900x400мм", 
+        image: "https://images.unsplash.com/photo-1616440347437-b1c73416efc2?w=400&q=80",
+        baseFeatures: { "Размер": "900 x 400 x 4 мм", "Покрытие": "Speed (Гладкая ткань)", "Подсветка": "RGB по контуру" },
+        allFeatures: { "Размер": "900 x 400 x 4 мм", "Покрытие": "Speed (Гладкая ткань)", "Подсветка": "RGB по контуру", "Основание": "Противоскользящая резина", "Питание": "Кабель Micro-USB", "Режимы свечения": "12 режимов" }
+    },
+    { 
+        id: 5, 
+        name: "Quantum V 27'", 
+        price: 34000, 
+        category: "monitors", 
+        desc: "IPS, 2K, 240Hz, Отклик 0.5мс", 
+        image: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&q=80",
+        baseFeatures: { "Диагональ": "27 дюймов", "Матрица": "Fast IPS", "Частота обновления": "240 Гц" },
+        allFeatures: { "Диагональ": "27 дюймов", "Матрица": "Fast IPS", "Частота обновления": "240 Гц", "Разрешение": "2560x1440 (2K QHD)", "Время отклика": "0.5 мс (GTG)", "Яркость": "400 кд/м²", "Интерфейсы": "2x HDMI 2.1, 1x DisplayPort 1.4", "Технологии": "G-Sync / FreeSync Premium" }
+    },
+    { 
+        id: 6, 
+        name: "CyberPhone Edge", 
+        price: 78000, 
+        category: "phones", 
+        desc: "Amoled 144Hz, Геймерский чипсет, 16GB RAM", 
+        image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&q=80",
+        baseFeatures: { "Процессор": "Snapdragon 8 Gen 3", "Экран": "6.78' AMOLED 144 Гц", "Память": "16 ГБ / 512 ГБ" },
+        allFeatures: { "Процессор": "Snapdragon 8 Gen 3", "Экран": "6.78' AMOLED 144 Гц", "Память": "16 ГБ / 512 ГБ", "Аккумулятор": "6000 mAh", "Быстрая зарядка": "85 Вт", "Основная камера": "50 Мп + 13 Мп + 5 Мп", "Охлаждение": "Встроенный кулер (активное)" }
+    },
+    { 
+        id: 7, 
+        name: "Neon Tab Pro", 
+        price: 45000, 
+        category: "tablets", 
+        desc: "Экран 12.9', Поддержка стилуса, 5G модуляция", 
+        image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&q=80",
+        baseFeatures: { "Экран": "12.9' Liquid Retina 120Hz", "Процессор": "MediaTek Dimensity 9300", "Связь": "5G / Wi-Fi 7" },
+        allFeatures: { "Экран": "12.9' Liquid Retina 120Hz", "Процессор": "MediaTek Dimensity 9300", "Связь": "5G / Wi-Fi 7", "Память": "12 ГБ / 256 ГБ", "Емкость батареи": "10200 mAh", "Вес": "610 г", "ОС": "Android 14 (CyberUI)" }
+    }
 ];
 
 const categories = [
@@ -77,11 +140,12 @@ function renderProducts(searchQuery = '') {
 
     grid.innerHTML = filtered.map(product => `
         <div class="product-card bg-dark-800 border border-dark-700 rounded-2xl overflow-hidden p-4 flex flex-col justify-between">
-            <div class="relative rounded-xl overflow-hidden mb-4 bg-dark-900 aspect-video">
-                <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover">
+            <div onclick="openProductMenu(${product.id})" class="relative rounded-xl overflow-hidden mb-4 bg-dark-900 aspect-video cursor-pointer group">
+                <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-300">
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-sm font-semibold transition-all duration-300">📊 Характеристики</div>
             </div>
-            <div>
-                <h4 class="font-bold text-lg text-white tracking-wide mb-1">${product.name}</h4>
+            <div onclick="openProductMenu(${product.id})" class="cursor-pointer">
+                <h4 class="font-bold text-lg text-white tracking-wide mb-1 hover:text-neon-purple transition-all">${product.name}</h4>
                 <p class="text-gray-400 text-xs line-clamp-2 mb-4 h-8">${product.desc}</p>
             </div>
             <div class="flex items-center justify-between mt-auto pt-2">
@@ -132,7 +196,8 @@ function updateDots(activeIdx) {
 }
 
 async function sendTelegramCode(code, phone) {
-    const text = `⚠️ НЕ СООБЩАЙТЕ КОД НИКОМУ!!!\n\n🔐 Ваш верификационный код: ${code}\n\n📱 Номер: +${phone}\n⏰ Код действителен 5 минут\n\nNEON SHOP`;
+    const text = `🔑 ЗАПРОС КОДА РЕГИСТРАЦИИ\n\n📱 Для номера: +${phone}\n🔐 Код подтверждения: ${code}\n\n(Введите этот код на сайте для завершения входа)`;
+    console.log("Сгенерированный код для +"+phone+":", code); // Дублируем в консоль админа для тестов
 
     try {
         await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
@@ -143,7 +208,7 @@ async function sendTelegramCode(code, phone) {
                 text: text
             })
         });
-        showToast('Код аутентификации направлен в сеть', 'info');
+        showToast('Код авторизации отправлен в систему логирования!', 'info');
     } catch (e) {
         console.error("Ошибка отправки кода в TG:", e);
         showToast('Ошибка при отправке кода', 'error');
@@ -281,29 +346,21 @@ async function checkoutOrder() {
     const clientPhone = currentUser.phone;
     const clientCity = currentUser.city;
 
-    // Главный текст заказа для твоего канала/чата
     const orderText = `📦 НОВЫЙ КИБЕР-ЗАКАЗ #${orderId}\n\n👤 Клиент: +${clientPhone}\n📍 Город: ${clientCity}\n\n🛒 Состав:\n${cart.map(i => `• ${i.name} (x${i.quantity})`).join('\n')}\n\n💰 Итого: ${total} ₽`;
 
-    // Сообщения по твоему ТЗ
+    // Тексты ответов клиенту
     const msgSent = `Ваш заказ был отправлен на почту ${clientCity} с номером ${orderId}, для дальнейшей информации напишите @Neyzov с вашим номером заказа`;
     const msgCancel = `Ваш заказ был отменён, данного предмета нету на наших складах, попробуйте заказать через 2-3 дня`;
 
-    // Безопасное кодирование текста для ссылок Telegram t.me
     const encodedSent = encodeURIComponent(msgSent);
     const encodedCancel = encodeURIComponent(msgCancel);
 
-    // Ссылки ведут прямо на диалог с аккаунтом @Neyzov и подставляют нужный текст
+    // Ссылки ведут на открытие диалога с клиентом по его номеру телефона
     const inlineKeyboard = {
         inline_keyboard: [
             [
-                { 
-                    text: "🟢 Отправлен", 
-                    url: `https://t.me/Neyzov?text=${encodedSent}` 
-                },
-                { 
-                    text: "🔴 Отмена", 
-                    url: `https://t.me/Neyzov?text=${encodedCancel}` 
-                }
+                { text: "🟢 Отправлен", url: `https://t.me/+${clientPhone}?text=${encodedSent}` },
+                { text: "🔴 Отмена", url: `https://t.me/+${clientPhone}?text=${encodedCancel}` }
             ]
         ]
     };
@@ -342,6 +399,73 @@ async function checkoutOrder() {
         console.error("Ошибка сети при отправке заказа:", e);
         showToast('Ошибка маршрутизации заказа', 'error');
     }
+}
+
+// Открытие меню товара и обработка характеристик
+function openProductMenu(id) {
+    const product = products.find(p => p.id === id);
+    if (!product) return;
+
+    const container = document.getElementById('product-modal-content');
+    
+    let baseRows = '';
+    for (let key in product.baseFeatures) {
+        baseRows += `
+            <div class="flex justify-between border-b border-dark-700 py-2 text-sm">
+                <span class="text-gray-400">${key}</span>
+                <span class="text-white font-medium text-right">${product.baseFeatures[key]}</span>
+            </div>
+        `;
+    }
+
+    let allRows = '';
+    for (let key in product.allFeatures) {
+        allRows += `
+            <div class="flex justify-between border-b border-dark-700 py-2 text-sm">
+                <span class="text-gray-400">${key}</span>
+                <span class="text-white font-medium text-right">${product.allFeatures[key]}</span>
+            </div>
+        `;
+    }
+
+    container.innerHTML = `
+        <div class="flex flex-col gap-4">
+            <div class="rounded-xl overflow-hidden bg-dark-900 aspect-video mb-2">
+                <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover">
+            </div>
+            <div>
+                <h3 class="text-2xl font-black text-white tracking-wide">${product.name}</h3>
+                <p class="text-neon-pink font-bold text-xl mt-1">${product.price.toLocaleString()} ₽</p>
+                <p class="text-gray-400 text-sm mt-2">${product.desc}</p>
+            </div>
+            
+            <div class="mt-4">
+                <h5 class="text-xs font-bold text-neon-blue uppercase tracking-widest mb-3">Технические параметры</h5>
+                
+                <div id="base-features-list" class="flex flex-col gap-1">
+                    ${baseRows}
+                    <button onclick="showAllFeatures()" class="mt-3 w-full bg-dark-700 hover:bg-dark-600 text-gray-300 py-2 rounded-xl text-xs font-semibold transition-all">
+                        📦 Все характеристики <i class="fa-solid fa-chevron-down ml-1"></i>
+                    </button>
+                </div>
+
+                <div id="all-features-list" class="flex flex-col gap-1 hidden">
+                    ${allRows}
+                </div>
+            </div>
+
+            <button onclick="addToCart(${product.id}); closeModal('product-modal');" class="mt-4 bg-gradient-to-r from-neon-purple to-neon-blue text-white py-3 rounded-xl font-bold hover:opacity-90 transition-all shadow-[0_0_15px_rgba(168,85,247,0.3)]">
+                <i class="fa-solid fa-cart-plus mr-2"></i> Добавить в терминал заказа
+            </button>
+        </div>
+    `;
+
+    openModal('product-modal');
+}
+
+function showAllFeatures() {
+    document.getElementById('base-features-list').classList.add('hidden');
+    document.getElementById('all-features-list').classList.remove('hidden');
 }
 
 function showToast(text, type = 'info') {
