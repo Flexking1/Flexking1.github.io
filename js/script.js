@@ -6,11 +6,11 @@ const TELEGRAM_CHAT_ID = '6954461123';
 const products = [
     { 
         id: 1, 
-        name: "Neon Matrix К65", 
-        price: 8900, 
+        name: "AULA F75", 
+        price: 11500, 
         category: "keyboards", 
         desc: "Механическая клавиатура, Gateron Yellow, RGB", 
-        image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&q=80",
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5V7Msl-5tkA6Cc-qGfOQEgrxri9406ZWEIYhDfdjGjQ&s=10",
         baseFeatures: { "Тип переключателей": "Механические (Gateron Yellow)", "Подсветка": "RGB (16.8 млн цветов)", "Формат": "65%" },
         allFeatures: { "Тип переключателей": "Механические (Gateron Yellow)", "Подсветка": "RGB (16.8 млн цветов)", "Формат": "65%", "Интерфейс": "Type-C / Bluetooth / 2.4GHz", "Материал кейса": "ABS-пластик", "Hot-swap": "Есть", "Емкость батареи": "4000 mAh", "Вес": "820 г" }
     },
