@@ -3,172 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEON SHOP | Cyberpunk Electronics</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        dark: {
-                            900: '#05010a',
-                            800: '#0f0518',
-                            700: '#1a0b2e',
-                            600: '#2d1b4e',
-                        },
-                        neon: {
-                            purple: '#a855f7',
-                            pink: '#d946ef',
-                            blue: '#6366f1',
-                        },
-                        telegram: '#24A1DE',
-                    }
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
+    <title>NEON SHOP</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Подключаем API Яндекс.Карт для отображения Почты России -->
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 </head>
-<body class="bg-dark-900 text-gray-100 font-['Inter'] min-h-screen selection:bg-neon-pink selection:text-white">
+<body>
 
-    <nav class="sticky top-0 z-40 border-b border-neon-purple/20 bg-dark-900/80 backdrop-blur-md px-4 py-4">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <a href="#" class="text-2xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-neon-pink neon-text">
-                NEON<span class="text-white">SHOP</span>
-            </a>
-            
-            <div class="hidden md:flex items-center relative w-96">
-                <input type="text" id="search-input" placeholder="Поиск цифрового снаряжения..." class="w-full bg-dark-800 border border-dark-600 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-neon-purple transition-all text-gray-200">
-                <i class="fa-solid fa-magnifying-glass absolute right-3 text-gray-500"></i>
-            </div>
+    <!-- Шапка сайта -->
+    <header>
+        <div class="logo">NEON <span>SHOP</span></div>
+        <nav>
+            <a href="#catalog" id="toCatalogLink">Каталог</a>
+            <button class="nav-btn" id="cartBtn">Корзина (<span id="cartCount">0</span>)</button>
+            <button class="nav-btn" id="profileBtn">Войти</button>
+        </nav>
+    </header>
 
-            <div class="flex items-center gap-4">
-                <button onclick="toggleCart()" class="relative p-2 text-gray-300 hover:text-neon-pink transition-colors">
-                    <i class="fa-solid fa-shopping-cart text-xl"></i>
-                    <span id="cart-count" class="absolute -top-1 -right-1 bg-neon-pink text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold shadow-[0_0_10px_#d946ef]">0</span>
-                </button>
-                
-                <div id="auth-zone">
-                    <button onclick="openModal('login-modal')" class="bg-gradient-to-r from-neon-purple to-neon-blue px-4 py-2 rounded-lg font-semibold text-sm hover:opacity-90 transition-all shadow-[0_0_15px_rgba(168,85,247,0.4)]">
-                        Вход
-                    </button>
+    <!-- Главный контейнер -->
+    <main>
+        <!-- Секция Личного Кабинета (Яндекс Маркет стайл) -->
+        <section id="profileDashboard" class="profile-dashboard hidden">
+            <!-- Левая колонка: Навигация -->
+            <div class="profile-sidebar">
+                <div class="user-card-top">
+                    <div class="avatar-box">N</div>
+                    <div class="user-meta">
+                        <h3 class="neon-text">User</h3>
+                        <p id="dashEmail">email@example.com</p>
+                        <span id="userBadge" class="user-badge">Cyber-User</span>
+                    </div>
                 </div>
+                <ul class="profile-menu">
+                    <li><button class="menu-link" data-target="orders-tab">Мои заказы</button></li>
+                    <li><button class="menu-link" data-target="favorites-tab">Избранное</button></li>
+                    <li><button class="menu-link" data-target="payments-tab">Способы оплаты</button></li>
+                    <li><button class="menu-link" data-target="addresses-tab">Адреса доставки</button></li>
+                    <li><button class="menu-link active" data-target="settings-tab">Настройки профиля</button></li>
+                    <!-- Вкладка только для Owner -->
+                    <li id="ownerMenuLi" class="hidden"><button class="menu-link owner-link" data-target="owner-tab">Панель Owner</button></li>
+                    <li><button id="logoutDashBtn" class="logout-link-btn">Выйти</button></li>
+                </ul>
             </div>
-        </div>
-    </nav>
 
-    <main class="max-w-7xl mx-auto px-4 py-8">
-        <section class="mb-10 overflow-x-auto no-scrollbar flex gap-3 pb-2" id="categories-container"></section>
-        <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="products-grid"></section>
+            <!-- Правая часть: Контент вкладок -->
+            <div class="profile-content">
+                
+                <!-- Вкладка: Настройки профиля -->
+                <div id="settings-tab" class="tab-content">
+                    <h1 class="dash-title">Настройки профиля</h1>
+                    <div class="dash-card">
+                        <h3>Контактные данные</h3>
+                        <form id="dashSettingsForm">
+                            <div class="dash-input-group">
+                                <label>Имя</label>
+                                <input type="text" id="dashNameInput" value="neyzov">
+                            </div>
+                            <div class="dash-input-group">
+                                <label>Email</label>
+                                <input type="email" id="dashEmailInput" readonly>
+                            </div>
+                            <div class="dash-input-group">
+                                <label>Телефон</label>
+                                <input type="text" id="dashPhoneInput" value="+7 (999) 123-45-67">
+                            </div>
+                            <button type="submit" class="dash-save-btn">Сохранить</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Вкладка: Мои заказы -->
+                <div id="orders-tab" class="tab-content hidden">
+                    <h1 class="dash-title">Мои заказы</h1>
+                    <div class="dash-card">
+                        <h3>История заказов</h3>
+                        <table class="orders-table">
+                            <thead>
+                                <tr>
+                                    <th>Статус</th>
+                                    <th>Дата</th>
+                                    <th>Итемы</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersHistoryBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Вкладка: Избранное -->
+                <div id="favorites-tab" class="tab-content hidden">
+                    <h1 class="dash-title">Избранное</h1>
+                    <div class="dash-card">
+                        <h3>Ваши сохраненные товары</h3>
+                        <p style="color: #666; padding: 20px 0;">У вас пока нет избранных товаров.</p>
+                    </div>
+                </div>
+
+                <!-- Вкладка: Способы оплаты -->
+                <div id="payments-tab" class="tab-content hidden">
+                    <h1 class="dash-title">Способы оплаты</h1>
+                    <div class="dash-card">
+                        <h3>Привязанные системы</h3>
+                        <div style="display:flex; align-items:center; gap:15px; margin-top:10px;">
+                            <div class="sbp-logo" style="font-size:18px; padding:5px 10px;">СБП</div>
+                            <p>Система быстрых платежей подключена по умолчанию</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Вкладка: Адреса доставки (С картой Почты России) -->
+                <div id="addresses-tab" class="tab-content hidden">
+                    <h1 class="dash-title">Адреса доставки</h1>
+                    <div class="dash-card">
+                        <h3>Ближайшие отделения Почты России</h3>
+                        <p style="margin-bottom: 15px; color:#aaa; font-size:14px;">Используйте карту для выбора удобного пункта выдачи.</p>
+                        <!-- Контейнер для Яндекс Карты -->
+                        <div id="map" style="width: 100%; height: 400px; border-radius: 8px; border: 1px solid var(--neon-cyan);"></div>
+                    </div>
+                </div>
+
+                <!-- Вкладка: Панель Owner (Управление товарами) -->
+                <div id="owner-tab" class="tab-content hidden">
+                    <h1 class="dash-title" style="color: var(--neon-pink);">Панель управления Owner</h1>
+                    <div class="dash-grid">
+                        <div class="dash-card">
+                            <h3>Добавить новый товар</h3>
+                            <form id="addProductForm">
+                                <div class="dash-input-group">
+                                    <label>Название товара</label>
+                                    <input type="text" id="prodName" required placeholder="Например: Custom Particle Node">
+                                </div>
+                                <div class="dash-input-group">
+                                    <label>Цена (₽)</label>
+                                    <input type="number" id="prodPrice" required placeholder="350">
+                                </div>
+                                <div class="dash-input-group">
+                                    <label>Характеристики товара</label>
+                                    <input type="text" id="prodSpecs" required placeholder="Формат: RAM: 2GB, Ping: 5ms, Fabric/Forge">
+                                </div>
+                                <div class="dash-input-group">
+                                    <label>Цвет градиента обложки</label>
+                                    <select id="prodColor">
+                                        <option value="linear-gradient(45deg, #ff0055, #00ffcc)">Розово-Бирюзовый</option>
+                                        <option value="linear-gradient(45deg, #b000ff, #ff0055)">Фиолетово-Розовый</option>
+                                        <option value="linear-gradient(45deg, #00ffcc, #0055ff)">Бирюзово-Синий</option>
+                                        <option value="linear-gradient(45deg, #ff9900, #ff0055)">Огненный неон</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="dash-save-btn" style="border-color: var(--neon-cyan); color: var(--neon-cyan);">Выложить на сайт</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Секция каталога товаров -->
+        <section id="catalog" class="catalog-section">
+            <h2 class="section-title">DEVICES & MODS</h2>
+            <div class="products-grid" id="catalogGrid">
+                <!-- Сюда динамически рендерятся и добавляются/удаляются товары -->
+            </div>
+        </section>
     </main>
 
-    <div id="cart-sidebar" class="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-dark-800/95 border-l border-neon-purple/30 backdrop-blur-lg transform translate-x-full transition-transform duration-300 ease-in-out p-6 flex flex-col">
-        <div class="flex justify-between items-center border-b border-dark-600 pb-4 mb-4">
-            <h3 class="text-xl font-bold text-neon-pink">Ваш заказ</h3>
-            <button onclick="toggleCart()" class="text-gray-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+    <!-- Модальное окно: Вход с проверкой кода через почту -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeAuth">&times;</span>
+            <h2 class="modal-title" id="authModalTitle">Вход в систему</h2>
+            
+            <!-- Шаг 1: Ввод почты -->
+            <form id="emailForm">
+                <div class="input-group">
+                    <input type="email" id="userEmail" required placeholder=" ">
+                    <label>Ваша почта</label>
+                </div>
+                <button type="submit" class="action-btn">Получить код</button>
+            </form>
+
+            <!-- Шаг 2: Ввод проверочного кода (скрыт по умолчанию) -->
+            <form id="codeForm" class="hidden">
+                <p style="font-size: 14px; margin-bottom: 15px; color: #aaa;">Код отправлен на указанный email.</p>
+                <div class="input-group">
+                    <input type="text" id="verifyCode" required maxlength="4" placeholder=" ">
+                    <label>4-значный код</label>
+                </div>
+                <button type="submit" class="action-btn" style="background: var(--neon-pink); color:#fff;">Подтвердить</button>
+            </form>
         </div>
-        <div id="cart-items" class="flex-1 overflow-y-auto space-y-4 pr-2"></div>
-        <div class="border-t border-dark-600 pt-4 mt-4 space-y-4">
-            <div class="flex justify-between font-bold text-lg">
-                <span>Итого к оплате:</span>
-                <span id="cart-total" class="text-neon-purple">0 ₽</span>
-            </div>
-            <button onclick="checkoutOrder()" class="w-full bg-gradient-to-r from-neon-pink to-neon-purple py-3 rounded-xl font-bold text-center tracking-wide hover:brightness-110 transition-all shadow-[0_0_20px_rgba(217,70,239,0.4)]">
-                ОФОРМИТЬ ЗАКАЗ
+    </div>
+
+    <!-- Модальное окно: Корзина -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeCart">&times;</span>
+            <h2 class="modal-title">Ваш заказ</h2>
+            <div id="cartItemsList"></div>
+            <div class="cart-total">Итого к оплате: <span id="totalPrice">0</span> ₽</div>
+            <button id="paySbpBtn" class="action-btn sbp-btn hidden">
+                <span class="sbp-logo">СБП</span> Оплатить через СБП
             </button>
-        </div>
-    </div>
-    <div id="cart-overlay" onclick="toggleCart()" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 hidden"></div>
 
-    <div id="login-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
-        <div class="glass-panel w-full max-w-md p-8 relative rounded-2xl border border-neon-purple/30">
-            <button onclick="closeModal('login-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-            
-            <div class="flex justify-center gap-2 mb-6" id="step-indicators">
-                <span class="w-3 h-3 rounded-full bg-neon-purple step-dot"></span>
-                <span class="w-3 h-3 rounded-full bg-dark-600 step-dot"></span>
-                <span class="w-3 h-3 rounded-full bg-dark-600 step-dot"></span>
-            </div>
-
-            <div id="step-1" class="form-step">
-                <h3 class="text-2xl font-black text-center mb-2">АУТЕНТИФИКАЦИЯ</h3>
-                <p class="text-gray-400 text-sm text-center mb-6">Введите номер телефона без "+" (например, 79991234567)</p>
-                <input type="tel" id="login-phone" placeholder="79999999999" class="w-full bg-dark-900 border border-dark-600 rounded-lg px-4 py-3 mb-4 focus:outline-none focus:border-neon-purple transition-all text-center tracking-wider">
-                <button onclick="nextStep(2)" class="w-full bg-neon-purple py-3 rounded-lg font-bold hover:bg-neon-purple/80 transition-all">Получить код</button>
-            </div>
-
-            <div id="step-2" class="form-step hidden">
-                <h3 class="text-2xl font-black text-center mb-2 text-telegram">ВЕРИФИКАЦИЯ</h3>
-                <p class="text-gray-400 text-sm text-center mb-4">Мы отправили код безопасности в нашего бота <a href="https://t.me/neonshop_verify_bot" target="_blank" class="text-neon-blue underline">@neonshop_verify_bot</a></p>
-                <div class="flex justify-between gap-2 mb-4">
-                    <input type="text" id="verification-code" placeholder="------" class="w-full bg-dark-900 border border-dark-600 rounded-lg py-3 text-center text-xl font-bold tracking-[0.3em] focus:outline-none focus:border-telegram text-telegram">
+            <div id="sbpQrState" class="hidden">
+                <hr class="divider">
+                <h3>Сканируйте для оплаты</h3>
+                <div class="qr-placeholder">
+                    <div class="qr-code-box">
+                        <div class="qr-square"></div>
+                        <span class="sbp-mini-logo">сбп</span>
+                    </div>
                 </div>
-                <button onclick="nextStep(3)" class="w-full bg-telegram py-3 rounded-lg font-bold hover:opacity-90 transition-all">Подтвердить</button>
-            </div>
-
-            <div id="step-3" class="form-step hidden">
-                <h3 class="text-2xl font-black text-center mb-2 text-neon-pink">МЕСТОПОЛОЖЕНИЕ</h3>
-                <p class="text-gray-400 text-sm text-center mb-6">Определите терминал доставки для расчёта логистики</p>
-                <button onclick="detectGeo()" class="w-full bg-dark-700 border border-neon-blue/40 py-3 rounded-lg font-semibold mb-4 flex items-center justify-center gap-2 hover:bg-dark-600 transition-all">
-                    <i class="fa-solid fa-location-crosshairs text-neon-blue"></i> Определить автоматически
-                </button>
-                <select id="city-select" class="w-full bg-dark-900 border border-dark-600 rounded-lg px-4 py-3 mb-6 focus:outline-none focus:border-neon-pink">
-                    <option value="Москва">Москва</option>
-                    <option value="Челябинск">Челябинск</option>
-                    <option value="Екатеринбург">Екатеринбург</option>
-                    <option value="Казань">Казань</option>
-                    <option value="Копейск">Копейск</option>
-                </select>
-                <button onclick="finishLogin()" class="w-full bg-gradient-to-r from-neon-purple to-neon-pink py-3 rounded-lg font-bold transition-all">Войти в систему</button>
+                <button id="mockSuccessPay" class="action-btn count-btn">Я оплатил</button>
             </div>
         </div>
     </div>
 
-    <div id="profile-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
-        <div class="glass-panel w-full max-w-2xl p-8 relative rounded-2xl border border-neon-blue/30">
-            <button onclick="closeModal('profile-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-            
-            <div class="flex flex-col md:flex-row gap-6 items-center border-b border-dark-600 pb-6 mb-6">
-                <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-neon-purple to-neon-pink p-1 shadow-[0_0_15px_#a855f7]">
-                    <div class="w-full h-full bg-dark-800 rounded-full flex items-center justify-center text-3xl font-bold text-white">N</div>
-                </div>
-                <div class="text-center md:text-left flex-1">
-                    <h3 id="profile-phone" class="text-2xl font-black tracking-wide">Пользователь</h3>
-                    <p id="profile-city" class="text-neon-blue text-sm"><i class="fa-solid fa-location-dot"></i> Город: не определен</p>
-                </div>
-                <button onclick="logout()" class="text-sm bg-red-500/20 hover:bg-red-500/40 text-red-400 px-4 py-2 rounded-lg border border-red-500/30 transition-all">Выйти</button>
-            </div>
+    <!-- Всплывающий кастомный тост-уведомление для кода -->
+    <div id="toastNotification" class="toast hidden"></div>
 
-            <div class="grid grid-cols-3 gap-4 mb-6">
-                <div class="bg-dark-800 p-4 rounded-xl border border-dark-600 text-center">
-                    <span class="text-xs text-gray-400 uppercase tracking-wider block mb-1">Заказы</span>
-                    <span id="stat-orders" class="text-xl font-bold text-neon-purple">0</span>
-                </div>
-                <div class="bg-dark-800 p-4 rounded-xl border border-dark-600 text-center">
-                    <span class="text-xs text-gray-400 uppercase tracking-wider block mb-1">Потрачено</span>
-                    <span id="stat-spent" class="text-xl font-bold text-neon-pink">0 ₽</span>
-                </div>
-                <div class="bg-dark-800 p-4 rounded-xl border border-dark-600 text-center">
-                    <span class="text-xs text-gray-400 uppercase tracking-wider block mb-1">Бонусы</span>
-                    <span id="stat-bonuses" class="text-xl font-bold text-neon-blue">150 Ⓝ</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="toast-container" class="fixed bottom-5 right-5 z-50 space-y-3"></div>
-
-    <script src="js/script.js"></script>
-    <div id="product-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-dark-800 border border-dark-700 w-full max-w-lg rounded-2xl p-6 relative shadow-[0_0_50px_rgba(168,85,247,0.15)] max-h-[90vh] overflow-y-auto">
-        <button onclick="closeModal('product-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
-
-        <div id="product-modal-content"></div>
-    </div>
-</div>
+    <script src="script.js"></script>
 </body>
 </html>
