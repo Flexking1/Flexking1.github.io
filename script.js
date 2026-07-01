@@ -1,5 +1,5 @@
 // URL твоего локального FastAPI сервера
-const API_URL = "http://127.0.0.1:8000/api";
+const API_URL = "https://yakryt.onrender.com/api";
 
 // Базовая база данных товаров (хранится в localStorage, чтобы изменения не пропадали при обновлении)
 let defaultProducts = [
