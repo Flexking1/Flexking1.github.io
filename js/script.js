@@ -1,491 +1,395 @@
-// Конфигурация API
-const TELEGRAM_BOT_TOKEN = '8696257846:AAFhjWlgS8FcmN00SL1seQSqoGzt3I8Sauo';
-const TELEGRAM_CHAT_ID = '6954461123'; 
+// URL твоего локального FastAPI сервера
+const API_URL = "http://127.0.0.1:8000/api";
 
-// База данных товаров с базовыми и полными характеристиками
-const products = [
-    { 
-        id: 1, 
-        name: "AULA F75", 
-        price: 11500, 
-        category: "keyboards", 
-        desc: "Механическая клавиатура, Gateron Yellow, RGB", 
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5V7Msl-5tkA6Cc-qGfOQEgrxri9406ZWEIYhDfdjGjQ&s=10",
-        baseFeatures: { "Тип переключателей": "Механические (Leobog Gray Wood)", "Подсветка": "RGB (16.8 млн цветов)", "Формат": "75%" },
-        allFeatures: { "Тип переключателей": "Механические (Leobog Gray Wood)", "Подсветка": "RGB (16.8 млн цветов)", "Формат": "75%", "Интерфейс": "Type-C / Bluetooth / 2.4GHz", "Материал кейса": "ABS-пластик", "Hot-swap": "Есть", "Емкость батареи": "4000 mAh", "Вес": "1023 г" }
-    },
-    { 
-        id: 2, 
-        name: "Cyber Glide X", 
-        price: 4500, 
-        category: "mice", 
-        desc: "Беспроводная мышь, 26000 DPI, 54 грамма", 
-        image: "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=400&q=80",
-        baseFeatures: { "Сенсор": "Оптический (PixArt 3395)", "Макс. DPI": "26000", "Вес": "54 грамма" },
-        allFeatures: { "Сенсор": "Оптический (PixArt 3395)", "Макс. DPI": "26000", "Вес": "54 грамма", "Тип подключения": "Беспроводной (2.4GHz) / Проводной", "Время работы": "До 70 часов", "Количество кнопок": "6", "Переключатели": "Huano Blue Shell (80 млн кликов)" }
-    },
-    { 
-        id: 3, 
-        name: "Overdrive Pro", 
-        price: 12400, 
-        category: "headphones", 
-        desc: "Гарнитура со звуком 7.1 и неоновой подсветкой", 
-        image: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400&q=80",
-        baseFeatures: { "Звук": "Виртуальный 7.1", "Диаметр мембраны": "50 мм", "Тип подключения": "USB / AUX 3.5мм" },
-        allFeatures: { "Звук": "Виртуальный 7.1", "Диаметр мембраны": "50 мм", "Тип подключения": "USB / AUX 3.5мм", "Частотный диапазон": "20 Гц - 20 кГц", "Микрофон": "Съемный, с шумоподавлением", "Материал амбушюр": "Протеиновая кожа", "Длина кабеля": "2.1 м" }
-    },
-    { 
-        id: 4, 
-        name: "Grid Runner Pad", 
-        price: 2100, 
-        category: "mousepads", 
-        desc: "Ковёр с контурной подсветкой 900x400мм", 
-        image: "https://images.unsplash.com/photo-1616440347437-b1c73416efc2?w=400&q=80",
-        baseFeatures: { "Размер": "900 x 400 x 4 мм", "Покрытие": "Speed (Гладкая ткань)", "Подсветка": "RGB по контуру" },
-        allFeatures: { "Размер": "900 x 400 x 4 мм", "Покрытие": "Speed (Гладкая ткань)", "Подсветка": "RGB по контуру", "Основание": "Противоскользящая резина", "Питание": "Кабель Micro-USB", "Режимы свечения": "12 режимов" }
-    },
-    { 
-        id: 5, 
-        name: "Quantum V 27'", 
-        price: 34000, 
-        category: "monitors", 
-        desc: "IPS, 2K, 240Hz, Отклик 0.5мс", 
-        image: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&q=80",
-        baseFeatures: { "Диагональ": "27 дюймов", "Матрица": "Fast IPS", "Частота обновления": "240 Гц" },
-        allFeatures: { "Диагональ": "27 дюймов", "Матрица": "Fast IPS", "Частота обновления": "240 Гц", "Разрешение": "2560x1440 (2K QHD)", "Время отклика": "0.5 мс (GTG)", "Яркость": "400 кд/м²", "Интерфейсы": "2x HDMI 2.1, 1x DisplayPort 1.4", "Технологии": "G-Sync / FreeSync Premium" }
-    },
-    { 
-        id: 6, 
-        name: "CyberPhone Edge", 
-        price: 78000, 
-        category: "phones", 
-        desc: "Amoled 144Hz, Геймерский чипсет, 16GB RAM", 
-        image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&q=80",
-        baseFeatures: { "Процессор": "Snapdragon 8 Gen 3", "Экран": "6.78' AMOLED 144 Гц", "Память": "16 ГБ / 512 ГБ" },
-        allFeatures: { "Процессор": "Snapdragon 8 Gen 3", "Экран": "6.78' AMOLED 144 Гц", "Память": "16 ГБ / 512 ГБ", "Аккумулятор": "6000 mAh", "Быстрая зарядка": "85 Вт", "Основная камера": "50 Мп + 13 Мп + 5 Мп", "Охлаждение": "Встроенный кулер (активное)" }
-    },
-    { 
-        id: 7, 
-        name: "Neon Tab Pro", 
-        price: 45000, 
-        category: "tablets", 
-        desc: "Экран 12.9', Поддержка стилуса, 5G модуляция", 
-        image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&q=80",
-        baseFeatures: { "Экран": "12.9' Liquid Retina 120Hz", "Процессор": "MediaTek Dimensity 9300", "Связь": "5G / Wi-Fi 7" },
-        allFeatures: { "Экран": "12.9' Liquid Retina 120Hz", "Процессор": "MediaTek Dimensity 9300", "Связь": "5G / Wi-Fi 7", "Память": "12 ГБ / 256 ГБ", "Емкость батареи": "10200 mAh", "Вес": "610 г", "ОС": "Android 14 (CyberUI)" }
-    }
+// Базовая база данных товаров (хранится в localStorage, чтобы изменения не пропадали при обновлении)
+let defaultProducts = [
+    { id: 1, name: "Neon Matrix Skin", price: 299, color: "linear-gradient(45deg, #ff0055, #00ffcc)", specs: "Формат: PNG, 64x64, Анимированные светящиеся линии, Киберпанк" },
+    { id: 2, name: "Cyber Launcher Premium", price: 599, color: "linear-gradient(45deg, #00ffcc, #0055ff)", specs: "Engine: CustomTkinter, Авто-апдейт модов, Оптимизация JVM" },
+    { id: 3, name: "TinSy Tunnel Node", price: 150, color: "linear-gradient(45deg, #b000ff, #ff0055)", specs: "Протокол: VLESS, Reality, Sing-box ядро, Трафик: Безлимит" }
 ];
 
-const categories = [
-    { id: 'all', name: 'Все товары' },
-    { id: 'keyboards', name: 'Клавиатуры' },
-    { id: 'mice', name: 'Мыши' },
-    { id: 'headphones', name: 'Наушники' },
-    { id: 'mousepads', name: 'Коврики' },
-    { id: 'monitors', name: 'Мониторы' },
-    { id: 'phones', name: 'Телефоны' },
-    { id: 'tablets', name: 'Планшеты' }
+let products = JSON.parse(localStorage.getItem('shop_products')) || defaultProducts;
+let currentUser = JSON.parse(localStorage.getItem('user')) || null;
+let cart = [];
+let localOrders = JSON.parse(localStorage.getItem('orders')) || [
+    { id: 1, date: '29.06.2026', time: '12:53:53', itemsCount: 1 },
+    { id: 2, date: '29.06.2026', time: '10:32:05', itemsCount: 1 }
 ];
 
-// Глобальное состояние
-let currentUser = JSON.parse(localStorage.getItem('neon_user')) || null;
-let cart = JSON.parse(localStorage.getItem('neon_cart')) || [];
-let currentCategory = 'all';
-let generatedCode = '';
-let tempPhone = '';
+// Стейт временных данных для авторизации
+let tempEmail = null;
 
-document.addEventListener("DOMContentLoaded", () => {
-    renderCategories();
-    renderProducts();
-    updateAuthUI();
-    updateCartUI();
-    
-    document.getElementById('search-input').addEventListener('input', (e) => {
-        renderProducts(e.target.value.toLowerCase());
+// Элементы DOM
+const authModal = document.getElementById('authModal');
+const cartModal = document.getElementById('cartModal');
+const profileBtn = document.getElementById('profileBtn');
+const cartBtn = document.getElementById('cartBtn');
+const closeAuth = document.getElementById('closeAuth');
+const closeCart = document.getElementById('closeCart');
+
+const emailForm = document.getElementById('emailForm');
+const codeForm = document.getElementById('codeForm');
+const userEmailInput = document.getElementById('userEmail');
+const verifyCodeInput = document.getElementById('verifyCode');
+const authModalTitle = document.getElementById('authModalTitle');
+
+const profileDashboard = document.getElementById('profileDashboard');
+const catalogSection = document.getElementById('catalog');
+const catalogGrid = document.getElementById('catalogGrid');
+const toCatalogLink = document.getElementById('toCatalogLink');
+const dashEmail = document.getElementById('dashEmail');
+const dashEmailInput = document.getElementById('dashEmailInput');
+const userBadge = document.getElementById('userBadge');
+const ownerMenuLi = document.getElementById('ownerMenuLi');
+const logoutDashBtn = document.getElementById('logoutDashBtn');
+const ordersHistoryBody = document.getElementById('ordersHistoryBody');
+
+const addProductForm = document.getElementById('addProductForm');
+const toastNotification = document.getElementById('toastNotification');
+
+const cartItemsList = document.getElementById('cartItemsList');
+const totalPriceEl = document.getElementById('totalPrice');
+const cartCount = document.getElementById('cartCount');
+const paySbpBtn = document.getElementById('paySbpBtn');
+const sbpQrState = document.getElementById('sbpQrState');
+const mockSuccessPay = document.getElementById('mockSuccessPay');
+
+// ================= СЕКЦИЯ КАТАЛОГА И ТОВАРОВ =================
+
+// Инициализация витрины товаров
+function renderCatalog() {
+    catalogGrid.innerHTML = '';
+    products.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.dataset.id = p.id;
+        
+        // Кнопка удаления видна только если авторизован Owner (nikitapilman556@gmail.com)
+        const deleteBtnHtml = (currentUser && currentUser.email === 'nikitapilman556@gmail.com') 
+            ? `<button class="delete-item-btn" onclick="deleteProduct(${p.id})">&times;</button>` 
+            : '';
+
+        card.innerHTML = `
+            ${deleteBtnHtml}
+            <div class="product-img" style="background: ${p.color};"></div>
+            <h3>${p.name}</h3>
+            <div class="specs-text">${p.specs}</div>
+            <p class="price">${p.price} ₽</p>
+            <button class="buy-btn" onclick="addToCart(${p.id})">В корзину</button>
+        `;
+        catalogGrid.appendChild(card);
     });
+}
+
+// Удаление товара (доступно только Owner)
+window.deleteProduct = (id) => {
+    products = products.filter(p => p.id !== id);
+    localStorage.setItem('shop_products', JSON.stringify(products));
+    renderCatalog();
+    showToast("Товар успешно удален с витрины");
+};
+
+// Добавление нового товара из панели Owner
+addProductForm.onsubmit = (e) => {
+    e.preventDefault();
+    const name = document.getElementById('prodName').value.trim();
+    const price = parseInt(document.getElementById('prodPrice').value);
+    const specs = document.getElementById('prodSpecs').value.trim();
+    const color = document.getElementById('prodColor').value;
+
+    if (name && price && specs) {
+        const newProd = {
+            id: Date.now(),
+            name: name,
+            price: price,
+            specs: specs,
+            color: color
+        };
+        products.push(newProd);
+        localStorage.setItem('shop_products', JSON.stringify(products));
+        renderCatalog();
+        addProductForm.reset();
+        showToast("Товар успешно опубликован на сайте!");
+    }
+};
+
+// Добавление товара в корзину
+window.addToCart = (id) => {
+    const prod = products.find(p => p.id === id);
+    if (prod) {
+        cart.push(prod);
+        cartCount.textContent = cart.length;
+        showToast(`Добавлено в корзину: ${prod.name}`);
+    }
+};
+
+// ================= АВТОРИЗАЦИЯ И РАБОТА С СЕРВЕРОМ =================
+
+// ШАГ 1: Запрос кода у FastAPI сервера
+emailForm.onsubmit = async (e) => {
+    e.preventDefault();
+    tempEmail = userEmailInput.value.trim();
+    
+    if (tempEmail) {
+        try {
+            showToast("Отправка кода авторизации на почту...");
+            
+            const response = await fetch(`${API_URL}/send-code`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: tempEmail })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                emailForm.classList.add('hidden');
+                codeForm.classList.remove('hidden');
+                authModalTitle.textContent = 'Введите код из письма';
+                showToast(`Код отправлен на почту ${tempEmail}`);
+            } else {
+                alert(`Ошибка сервера: ${result.detail}`);
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Не удалось связаться с сервером. Убедись, что твой server.py запущен!");
+        }
+    }
+};
+
+// ШАГ 2: Проверка введенного кода сервером
+codeForm.onsubmit = async (e) => {
+    e.preventDefault();
+    const typedCode = verifyCodeInput.value.trim();
+    
+    if (typedCode) {
+        try {
+            const response = await fetch(`${API_URL}/verify-code`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: tempEmail, code: typedCode })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                currentUser = { email: tempEmail };
+                localStorage.setItem('user', JSON.stringify(currentUser));
+                
+                initUser();
+                authModal.style.display = 'none';
+                
+                // Возвращаем форму входа в исходное состояние для будущих сессий
+                emailForm.classList.remove('hidden');
+                codeForm.classList.add('hidden');
+                verifyCodeInput.value = '';
+                userEmailInput.value = '';
+                authModalTitle.textContent = 'Вход в систему';
+
+                // Сразу открываем ЛК
+                catalogSection.classList.add('hidden');
+                profileDashboard.classList.remove('hidden');
+                showToast("Вы успешно вошли в систему!");
+            } else {
+                alert(result.detail || "Введен неверный код!");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Ошибка при проверке кода на сервере.");
+        }
+    }
+};
+
+// Синхронизация интерфейса в зависимости от того, вошел ли юзер и какая у него почта
+function initUser() {
+    if (currentUser) {
+        profileBtn.textContent = 'Профиль';
+        dashEmail.textContent = currentUser.email;
+        dashEmailInput.value = currentUser.email;
+        
+        // Проверка на Owner-права
+        if (currentUser.email === 'nikitapilman556@gmail.com') {
+            userBadge.textContent = 'Owner';
+            userBadge.className = 'user-badge owner';
+            ownerMenuLi.classList.remove('hidden'); // Показываем админку
+        } else {
+            userBadge.textContent = 'Cyber-User';
+            userBadge.className = 'user-badge';
+            ownerMenuLi.classList.add('hidden'); // Скрываем админку
+        }
+        renderOrders();
+    } else {
+        profileBtn.textContent = 'Войти';
+        profileDashboard.classList.add('hidden');
+        catalogSection.classList.remove('hidden');
+        ownerMenuLi.classList.add('hidden');
+    }
+    renderCatalog();
+}
+
+// ================= ЛИЧНЫЙ КАБИНЕТ И ВКЛАДКИ (ЯНДЕКС МАРКЕТ СТАЙЛ) =================
+
+// Переключение вкладок в левом сайдбаре
+document.querySelectorAll('.profile-menu .menu-link').forEach(btn => {
+    btn.onclick = (e) => {
+        // Снимаем класс active со всех ссылок меню
+        document.querySelectorAll('.profile-menu .menu-link').forEach(l => l.classList.remove('active'));
+        // Скрываем весь контент вкладок
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+        
+        // Подсвечиваем текущую кнопку и открываем её таб
+        const targetBtn = e.currentTarget;
+        targetBtn.classList.add('active');
+        const targetTabId = targetBtn.getAttribute('data-target');
+        document.getElementById(targetTabId).classList.remove('hidden');
+
+        // Если выбрана вкладка "Адреса доставки", собираем/перерисовываем Яндекс Карту
+        if (targetTabId === 'addresses-tab') {
+            setTimeout(initMap, 200);
+        }
+    };
 });
 
-function renderCategories() {
-    const container = document.getElementById('categories-container');
-    if (!container) return;
-    container.innerHTML = categories.map(cat => `
-        <button onclick="setCategory('${cat.id}')" class="px-5 py-2 rounded-xl text-sm font-semibold tracking-wide border transition-all whitespace-nowrap ${currentCategory === cat.id ? 'bg-neon-purple border-neon-purple text-white shadow-[0_0_15px_#a855f7]' : 'bg-dark-800 border-dark-600 text-gray-400 hover:border-neon-purple/50'}">
-            ${cat.name}
-        </button>
-    `).join('');
-}
-
-function setCategory(id) {
-    currentCategory = id;
-    renderCategories();
-    renderProducts();
-}
-
-function renderProducts(searchQuery = '') {
-    const grid = document.getElementById('products-grid');
-    if (!grid) return;
-    let filtered = products;
-
-    if (currentCategory !== 'all') {
-        filtered = filtered.filter(p => p.category === currentCategory);
-    }
-    if (searchQuery) {
-        filtered = filtered.filter(p => p.name.toLowerCase().includes(searchQuery) || p.desc.toLowerCase().includes(searchQuery));
-    }
-
-    if(filtered.length === 0) {
-        grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-500">Системы сканирования не обнаружили подходящего снаряжения.</div>`;
-        return;
-    }
-
-    grid.innerHTML = filtered.map(product => `
-        <div class="product-card bg-dark-800 border border-dark-700 rounded-2xl overflow-hidden p-4 flex flex-col justify-between">
-            <div onclick="openProductMenu(${product.id})" class="relative rounded-xl overflow-hidden mb-4 bg-dark-900 aspect-video cursor-pointer group">
-                <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-300">
-                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-sm font-semibold transition-all duration-300">📊 Характеристики</div>
-            </div>
-            <div onclick="openProductMenu(${product.id})" class="cursor-pointer">
-                <h4 class="font-bold text-lg text-white tracking-wide mb-1 hover:text-neon-purple transition-all">${product.name}</h4>
-                <p class="text-gray-400 text-xs line-clamp-2 mb-4 h-8">${product.desc}</p>
-            </div>
-            <div class="flex items-center justify-between mt-auto pt-2">
-                <span class="text-xl font-black text-neon-pink">${product.price.toLocaleString()} ₽</span>
-                <button onclick="addToCart(${product.id})" class="bg-dark-700 hover:bg-neon-purple text-white border border-neon-purple/40 w-10 h-10 rounded-xl flex items-center justify-center transition-all">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
-            </div>
-        </div>
-    `).join('');
-}
-
-function openModal(id) {
-    document.getElementById(id).classList.remove('hidden');
-}
-function closeModal(id) {
-    document.getElementById(id).classList.add('hidden');
-}
-
-function nextStep(step) {
-    if (step === 2) {
-        const phone = document.getElementById('login-phone').value;
-        if(phone.length < 10) return showToast('Введите корректный номер (минимум 10 цифр)', 'error');
-        tempPhone = phone;
-        
-        generatedCode = Math.floor(100000 + Math.random() * 900000).toString();
-        sendTelegramCode(generatedCode, tempPhone);
-
-        document.getElementById('step-1').classList.add('hidden');
-        document.getElementById('step-2').classList.remove('hidden');
-        updateDots(1);
-    } else if (step === 3) {
-        const inputCode = document.getElementById('verification-code').value;
-        if(inputCode !== generatedCode) return showToast('Ошибка дешифрования: неверный код!', 'error');
-
-        document.getElementById('step-2').classList.add('hidden');
-        document.getElementById('step-3').classList.remove('hidden');
-        updateDots(2);
-    }
-}
-
-function updateDots(activeIdx) {
-    const dots = document.querySelectorAll('#step-indicators .step-dot');
-    dots.forEach((dot, idx) => {
-        if(idx <= activeIdx) dot.className = "w-3 h-3 rounded-full bg-neon-purple";
-        else dot.className = "w-3 h-3 rounded-full bg-dark-600";
+// Рендер истории заказов
+function renderOrders() {
+    ordersHistoryBody.innerHTML = '';
+    localOrders.forEach(order => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td class="status-success">Выполнен</td>
+            <td>${order.date}<br><span class="time-text">${order.time}</span></td>
+            <td>${order.itemsCount} х <span class="arrow-pink">&gt;</span></td>
+        `;
+        ordersHistoryBody.appendChild(tr);
     });
 }
 
-async function sendTelegramCode(code, phone) {
-    const text = `🔑 ЗАПРОС КОДА РЕГИСТРАЦИИ\n\n📱 Для номера: +${phone}\n🔐 Код подтверждения: ${code}\n\n(Введите этот код на сайте для завершения входа)`;
-    console.log("Сгенерированный код для +"+phone+":", code); // Дублируем в консоль админа для тестов
-
-    try {
-        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: TELEGRAM_CHAT_ID,
-                text: text
-            })
-        });
-        showToast('Код авторизации отправлен в систему логирования!', 'info');
-    } catch (e) {
-        console.error("Ошибка отправки кода в TG:", e);
-        showToast('Ошибка при отправке кода', 'error');
-    }
-}
-
-function detectGeo() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
-            document.getElementById('city-select').value = "Москва"; 
-            showToast('Координаты успешно синхронизированы', 'success');
-        }, () => {
-            showToast('Не удалось получить координаты', 'error');
-        });
-    }
-}
-
-function finishLogin() {
-    const selectedCity = document.getElementById('city-select').value;
-    currentUser = {
-        phone: tempPhone,
-        city: selectedCity,
-        ordersCount: 0,
-        totalSpent: 0
-    };
-    localStorage.setItem('neon_user', JSON.stringify(currentUser));
-    updateAuthUI();
-    closeModal('login-modal');
-    showToast('Протокол авторизации успешно завершен!', 'success');
-}
-
-function logout() {
-    currentUser = null;
-    localStorage.removeItem('neon_user');
-    updateAuthUI();
-    closeModal('profile-modal');
-    showToast('Сессия закрыта', 'info');
-}
-
-function updateAuthUI() {
-    const zone = document.getElementById('auth-zone');
-    if (!zone) return;
-    if (currentUser) {
-        zone.innerHTML = `
-            <button onclick="openModal('profile-modal')" class="border border-neon-blue text-neon-blue px-4 py-2 rounded-lg font-semibold text-sm hover:bg-neon-blue/10 transition-all">
-                <i class="fa-solid fa-user-astronaut mr-2"></i> Профиль
-            </button>
-        `;
-        document.getElementById('profile-phone').innerText = '+' + currentUser.phone;
-        document.getElementById('profile-city').innerHTML = `<i class="fa-solid fa-location-dot"></i> Город доставки: ${currentUser.city}`;
-    } else {
-        zone.innerHTML = `
-            <button onclick="openModal('login-modal')" class="bg-gradient-to-r from-neon-purple to-neon-blue px-4 py-2 rounded-lg font-semibold text-sm hover:opacity-90 transition-all shadow-[0_0_15px_rgba(168,85,247,0.4)]">
-                Вход
-            </button>
-        `;
-    }
-}
-
-function toggleCart() {
-    const sidebar = document.getElementById('cart-sidebar');
-    const overlay = document.getElementById('cart-overlay');
-    sidebar.classList.toggle('translate-x-full');
-    overlay.classList.toggle('hidden');
-}
-
-function addToCart(id) {
-    const product = products.find(p => p.id === id);
-    const existing = cart.find(item => item.id === id);
-    
-    if (existing) {
-        existing.quantity += 1;
-    } else {
-        cart.push({ ...product, quantity: 1 });
+// ================= ИНТЕГРАЦИЯ ЯНДЕКС КАРТЫ =================
+let myMap = null;
+function initMap() {
+    // Если объект карты уже создан, корректно его удаляем, чтобы переинициализировать без багов
+    if (myMap) {
+        myMap.destroy();
     }
     
-    localStorage.setItem('neon_cart', JSON.stringify(cart));
-    updateCartUI();
-    showToast(`${product.name} загружен в терминал заказа`, 'success');
+    // Создаем карту с центром на Москве
+    myMap = new ymaps.Map("map", {
+        center: [55.755826, 37.617633],
+        zoom: 11
+    });
+
+    // Набор точек отделений Почты России
+    const postOffices = [
+        { coords: [55.757937, 37.611111], text: "Почта России №101000 (Главпочтамт, ул. Мясницкая, 26)" },
+        { coords: [55.741544, 37.624510], text: "Отделение Почты 115035 (Пятницкая ул., 2/8с1)" },
+        { coords: [55.765432, 37.594321], text: "Отделение Почты 123001 (Б. Козихинский пер., 22)" }
+    ];
+
+    // Добавление кастомных неоновых меток на карту
+    postOffices.forEach(office => {
+        const placemark = new ymarks.Placemark(office.coords, {
+            balloonContent: `<strong>💥 NEON PICKUP POINT</strong><br>${office.text}`
+        }, {
+            preset: 'islands#pinkDotIcon'
+        });
+        myMap.geoObjects.add(placemark);
+    });
 }
 
-function changeQty(id, delta) {
-    const item = cart.find(item => item.id === id);
-    if (!item) return;
-    item.quantity += delta;
-    if (item.quantity <= 0) {
-        cart = cart.filter(i => i.id !== id);
-    }
-    localStorage.setItem('neon_cart', JSON.stringify(cart));
-    updateCartUI();
-}
+// ================= КОРЗИНА И ОПЛАТА =================
 
-function updateCartUI() {
-    const container = document.getElementById('cart-items');
-    const countBadge = document.getElementById('cart-count');
-    const totalLabel = document.getElementById('cart-total');
-
-    if (!container || !countBadge || !totalLabel) return;
-
+function renderCart() {
+    cartItemsList.innerHTML = '';
     let total = 0;
-    let itemsCount = 0;
-
-    container.innerHTML = cart.map(item => {
-        total += item.price * item.quantity;
-        itemsCount += item.quantity;
-        return `
-            <div class="flex items-center justify-between bg-dark-900 p-3 rounded-xl border border-dark-700">
-                <div class="flex-1 min-w-0 pr-2">
-                    <h5 class="font-semibold text-sm text-white truncate">${item.name}</h5>
-                    <span class="text-xs text-neon-pink font-bold">${(item.price * item.quantity).toLocaleString()} ₽</span>
-                </div>
-                <div class="flex items-center gap-2 bg-dark-700 px-2 py-1 rounded-lg">
-                    <button onclick="changeQty(${item.id}, -1)" class="text-gray-400 hover:text-white text-xs"><i class="fa-solid fa-minus"></i></button>
-                    <span class="text-sm font-bold w-4 text-center">${item.quantity}</span>
-                    <button onclick="changeQty(${item.id}, 1)" class="text-gray-400 hover:text-white text-xs"><i class="fa-solid fa-plus"></i></button>
-                </div>
-            </div>
-        `;
-    }).join('');
-
-    countBadge.innerText = itemsCount;
-    totalLabel.innerText = `${total.toLocaleString()} ₽`;
-}
-
-async function checkoutOrder() {
-    if (cart.length === 0) return showToast('Корзина пуста!', 'error');
-    if (!currentUser) {
-        toggleCart();
-        openModal('login-modal');
-        return showToast('Для совершения транзакции требуется авторизация', 'info');
-    }
-
-    const total = cart.reduce((acc, i) => acc + (i.price * i.quantity), 0);
-    const orderId = Math.floor(1000 + Math.random() * 9000); 
-    const clientPhone = currentUser.phone;
-    const clientCity = currentUser.city;
-
-    const orderText = `📦 НОВЫЙ КИБЕР-ЗАКАЗ #${orderId}\n\n👤 Клиент: +${clientPhone}\n📍 Город: ${clientCity}\n\n🛒 Состав:\n${cart.map(i => `• ${i.name} (x${i.quantity})`).join('\n')}\n\n💰 Итого: ${total} ₽`;
-
-    // Тексты ответов клиенту
-    const msgSent = `Ваш заказ был отправлен на почту ${clientCity} с номером ${orderId}, для дальнейшей информации напишите @Neyzov с вашим номером заказа`;
-    const msgCancel = `Ваш заказ был отменён, данного предмета нету на наших складах, попробуйте заказать через 2-3 дня`;
-
-    const encodedSent = encodeURIComponent(msgSent);
-    const encodedCancel = encodeURIComponent(msgCancel);
-
-    // Ссылки ведут на открытие диалога с клиентом по его номеру телефона
-    const inlineKeyboard = {
-        inline_keyboard: [
-            [
-                { text: "🟢 Отправлен", url: `https://t.me/+${clientPhone}?text=${encodedSent}` },
-                { text: "🔴 Отмена", url: `https://t.me/+${clientPhone}?text=${encodedCancel}` }
-            ]
-        ]
-    };
-
-    try {
-        const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: TELEGRAM_CHAT_ID,
-                text: orderText,
-                reply_markup: inlineKeyboard 
-            })
-        });
-
-        const result = await response.json();
-        
-        if (!result.ok) {
-            console.error("Ошибка Telegram API:", result.description);
-            showToast('Ошибка Telegram: ' + result.description, 'error');
-            return; 
-        }
-        
-        currentUser.ordersCount += 1;
-        currentUser.totalSpent += total;
-        localStorage.setItem('neon_user', JSON.stringify(currentUser));
-        
-        cart = [];
-        localStorage.removeItem('neon_cart');
-        updateCartUI();
-        toggleCart();
-        updateAuthUI();
-        
-        showToast('Заказ успешно зафиксирован!', 'success');
-    } catch(e) {
-        console.error("Ошибка сети при отправке заказа:", e);
-        showToast('Ошибка маршрутизации заказа', 'error');
-    }
-}
-
-// Открытие меню товара и обработка характеристик
-function openProductMenu(id) {
-    const product = products.find(p => p.id === id);
-    if (!product) return;
-
-    const container = document.getElementById('product-modal-content');
     
-    let baseRows = '';
-    for (let key in product.baseFeatures) {
-        baseRows += `
-            <div class="flex justify-between border-b border-dark-700 py-2 text-sm">
-                <span class="text-gray-400">${key}</span>
-                <span class="text-white font-medium text-right">${product.baseFeatures[key]}</span>
-            </div>
-        `;
+    if (cart.length === 0) {
+        cartItemsList.innerHTML = '<p style="color:#aaa; text-align:center;">Корзина пуста</p>';
+        paySbpBtn.classList.add('hidden');
+        totalPriceEl.textContent = 0;
+        return;
     }
+    
+    cart.forEach(item => {
+        total += item.price;
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.innerHTML = `<span>${item.name}</span><span>${item.price} ₽</span>`;
+        cartItemsList.appendChild(div);
+    });
+    
+    totalPriceEl.textContent = total;
+    paySbpBtn.classList.remove('hidden');
+}
 
-    let allRows = '';
-    for (let key in product.allFeatures) {
-        allRows += `
-            <div class="flex justify-between border-b border-dark-700 py-2 text-sm">
-                <span class="text-gray-400">${key}</span>
-                <span class="text-white font-medium text-right">${product.allFeatures[key]}</span>
-            </div>
-        `;
+paySbpBtn.onclick = () => sbpQrState.classList.remove('hidden');
+
+// Мокаем успешное подтверждение транзакции по QR коду
+mockSuccessPay.onclick = () => {
+    const now = new Date();
+    localOrders.unshift({
+        id: Date.now(),
+        date: now.toLocaleDateString('ru-RU'),
+        time: now.toLocaleTimeString('ru-RU'),
+        itemsCount: cart.length
+    });
+    localStorage.setItem('orders', JSON.stringify(localOrders));
+    
+    showToast("Оплата по СБП прошла успешно!");
+    cart = [];
+    cartCount.textContent = 0;
+    cartModal.style.display = 'none';
+    sbpQrState.classList.add('hidden');
+    
+    if (currentUser) renderOrders();
+};
+
+// ================= НАВИГАЦИЯ И ВСПОМОГАТЕЛЬНЫЕ ОКНА =================
+
+profileBtn.onclick = () => {
+    if (currentUser) {
+        catalogSection.classList.add('hidden');
+        profileDashboard.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+        authModal.style.display = 'block';
     }
+};
 
-    container.innerHTML = `
-        <div class="flex flex-col gap-4">
-            <div class="rounded-xl overflow-hidden bg-dark-900 aspect-video mb-2">
-                <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover">
-            </div>
-            <div>
-                <h3 class="text-2xl font-black text-white tracking-wide">${product.name}</h3>
-                <p class="text-neon-pink font-bold text-xl mt-1">${product.price.toLocaleString()} ₽</p>
-                <p class="text-gray-400 text-sm mt-2">${product.desc}</p>
-            </div>
-            
-            <div class="mt-4">
-                <h5 class="text-xs font-bold text-neon-blue uppercase tracking-widest mb-3">Технические параметры</h5>
-                
-                <div id="base-features-list" class="flex flex-col gap-1">
-                    ${baseRows}
-                    <button onclick="showAllFeatures()" class="mt-3 w-full bg-dark-700 hover:bg-dark-600 text-gray-300 py-2 rounded-xl text-xs font-semibold transition-all">
-                        📦 Все характеристики <i class="fa-solid fa-chevron-down ml-1"></i>
-                    </button>
-                </div>
+toCatalogLink.onclick = (e) => {
+    e.preventDefault();
+    profileDashboard.classList.add('hidden');
+    catalogSection.classList.remove('hidden');
+};
 
-                <div id="all-features-list" class="flex flex-col gap-1 hidden">
-                    ${allRows}
-                </div>
-            </div>
+logoutDashBtn.onclick = () => {
+    currentUser = null;
+    localStorage.removeItem('user');
+    initUser();
+    showToast("Вы вышли из аккаунта");
+};
 
-            <button onclick="addToCart(${product.id}); closeModal('product-modal');" class="mt-4 bg-gradient-to-r from-neon-purple to-neon-blue text-white py-3 rounded-xl font-bold hover:opacity-90 transition-all shadow-[0_0_15px_rgba(168,85,247,0.3)]">
-                <i class="fa-solid fa-cart-plus mr-2"></i> Добавить в терминал заказа
-            </button>
-        </div>
-    `;
+closeAuth.onclick = () => {
+    authModal.style.display = 'none';
+    emailForm.classList.remove('hidden');
+    codeForm.classList.add('hidden');
+};
 
-    openModal('product-modal');
+closeCart.onclick = () => { 
+    cartModal.style.display = 'none'; 
+    sbpQrState.classList.add('hidden'); 
+};
+
+cartBtn.onclick = () => { 
+    cartModal.style.display = 'block'; 
+    renderCart(); 
+};
+
+// Логика кастомных всплывающих уведомлений (Тостов)
+function showToast(message) {
+    toastNotification.textContent = message;
+    toastNotification.classList.remove('hidden');
+    setTimeout(() => toastNotification.classList.add('hidden'), 5000);
 }
 
-function showAllFeatures() {
-    document.getElementById('base-features-list').classList.add('hidden');
-    document.getElementById('all-features-list').classList.remove('hidden');
-}
-
-function showToast(text, type = 'info') {
-    const container = document.getElementById('toast-container');
-    if (!container) return;
-    const toast = document.createElement('div');
-    
-    const colors = {
-        success: 'border-green-500 bg-green-950/80 text-green-200',
-        error: 'border-red-500 bg-red-950/80 text-red-200',
-        info: 'border-neon-blue bg-dark-800/90 text-blue-200'
-    };
-
-    toast.className = `border-l-4 p-4 rounded-r-xl glass-panel shadow-lg flex items-center gap-3 transition-all duration-300 transform translate-x-12 opacity-0 ${colors[type]}`;
-    toast.innerHTML = `<i class="fa-solid ${type==='success'?'fa-circle-check':type==='error'?'fa-circle-exclamation':'fa-microchip'}"></i> <span class="text-sm font-semibold">${text}</span>`;
-    
-    container.appendChild(toast);
-    setTimeout(() => { toast.classList.remove('translate-x-12', 'opacity-0'); }, 10);
-    setTimeout(() => {
-        toast.classList.add('translate-x-12', 'opacity-0');
-        setTimeout(() => { toast.remove(); }, 300);
-    }, 3500);
-}
+// Первый запуск приложения при загрузке страницы
+initUser();
